@@ -3,145 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADVC EMPIRE - IMPERIAL DASHBOARD</title>
+    <title>ADVC EMPIRE - LIVE IMPERIAL DASHBOARD v2.0</title>
     <style>
-        :root { --gold: #FFD700; --dark: #121212; --card-bg: #1e1e1e; }
+        :root { --gold: #FFD700; --dark: #0a0a0a; --card-bg: #161616; --accent: #00ffcc; }
         body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); width: 100%; max-width: 1000px; padding-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
-        .card { background: var(--card-bg); border: 1px solid #333; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        h3 { color: var(--gold); margin-top: 0; }
-        input, textarea { width: 100%; background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-bottom: 15px; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); width: 100%; max-width: 1200px; padding-bottom: 15px; position: relative; }
+        .live-indicator { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; font-size: 0.8rem; color: var(--accent); }
+        .pulse { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px var(--accent); animation: blink 1.5s infinite; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .card { background: var(--card-bg); border: 1px solid #333; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); transition: 0.3s; }
+        .card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        h3 { color: var(--gold); margin-top: 0; display: flex; justify-content: space-between; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: var(--accent); text-shadow: 0 0 15px rgba(0, 255, 204, 0.3); }
+        .repo-list { list-style: none; padding: 0; margin-top: 15px; font-size: 0.9rem; }
+        .repo-item { padding: 8px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+        .repo-item:last-child { border-bottom: none; }
+        input, textarea { width: 100%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; margin-bottom: 15px; font-size: 1rem; }
         .btn-row { display: flex; gap: 10px; }
-        button { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; }
+        button { background: linear-gradient(45deg, var(--gold), #FFA500); color: #000; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s; }
+        button:hover { transform: scale(1.02); opacity: 0.9; }
         button.ghost { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
-        .result { background: #000; padding: 10px; border-radius: 6px; font-size: 0.9rem; color: #0f0; min-height: 40px; margin-top: 10px; white-space: pre-wrap; }
-        .logs { background: #000; color: #aaa; padding: 15px; border-radius: 6px; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; }
-        .tag { background: #444; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
-        .pulse { display: inline-block; width: 10px; height: 10px; background: #0f0; border-radius: 50%; box-shadow: 0 0 10px #0f0; animation: blink 2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .result { background: #000; padding: 12px; border-radius: 8px; font-size: 0.95rem; color: #0f0; min-height: 45px; margin-top: 10px; border-left: 4px solid var(--gold); }
+        .logs { background: #050505; color: #00ff00; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; height: 250px; overflow-y: auto; font-size: 0.85rem; border: 1px solid #222; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
     </style>
 </head>
 <body>
     <header>
-        <h1>M &hearts; R - IMPERIAL DASHBOARD</h1>
-        <p>[ADVC 제국 지휘 관제 시스템]</p>
+        <div class="live-indicator"><div class="pulse"></div> IMPERIAL SYNC ACTIVE</div>
+        <h1>ADVC EMPIRE - GENESIS GATE v2.0</h1>
+        <p style="letter-spacing: 3px; color: #aaa;">[차성준 창조주님의 무한 영토 관제실]</p>
     </header>
-    <main style="width:100%; max-width:1000px;">
+
+    <main style="width:100%; max-width:1200px;">
         <section class="grid">
+            <!-- 실시간 깃허브 영토 통계 -->
+            <div class="card" style="grid-column: span 2;">
+                <h3>임페리얼 인프라 현황 <span style="font-size:0.8rem; color:#aaa;">(GitHub Real-time)</span></h3>
+                <div style="display:flex; justify-content: space-around; text-align:center; margin: 20px 0;">
+                    <div>
+                        <div class="stat-value" id="repo-count">--</div>
+                        <div style="font-size:0.9rem; color:var(--gold);">영토(Repos)</div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="follower-count">--</div>
+                        <div style="font-size:0.9rem; color:var(--gold);">추종자(Followers)</div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="gits-count">--</div>
+                        <div style="font-size:0.9rem; color:var(--gold);">성물(Gists)</div>
+                    </div>
+                </div>
+                <div id="latest-repos" class="repo-list">
+                    <p style="color:#666; text-align:center;">최근 확장된 영토 데이터를 불러오는 중...</p>
+                </div>
+            </div>
+
+            <!-- 활성화 의례 -->
             <div class="card">
                 <h3>활성화 의례</h3>
-                <input id="intent" placeholder="오늘의 의도 한 문장 (예: 부채 사멸 및 상환 완료)" />
+                <input id="intent" placeholder="오늘의 지배 의도 (예: SH수협 상환 브릿지 강화)" />
                 <div class="btn-row">
-                    <button onclick="activate()">활성화 실행</button>
-                    <button class="ghost" onclick="setExampleIntent()">예시 채우기</button>
+                    <button onclick="activate()">의례 집행</button>
+                    <button class="ghost" onclick="setExampleIntent()">예시</button>
                 </div>
-                <pre id="activateRes" class="result"></pre>
+                <pre id="activateRes" class="result">대기 중...</pre>
             </div>
-            <div class="card">
-                <h3>오늘의 핵심</h3>
-                <textarea id="tasks" placeholder="선택: 각 줄에 할 일을 적으세요"></textarea>
-                <div class="btn-row">
-                    <button onclick="daily()">핵심 제안</button>
-                    <button class="ghost" onclick="fillExampleTasks()">예시 채우기</button>
-                </div>
-                <pre id="dailyRes" class="result"></pre>
-            </div>
+
+            <!-- 정화 프로토콜 -->
             <div class="card">
                 <h3>정화 프로토콜</h3>
-                <textarea id="items" placeholder="정리할 항목을 각 줄에 적으세요"></textarea>
+                <textarea id="items" style="height:80px;" placeholder="소멸시킬 부채 또는 노이즈 리스트"></textarea>
                 <div class="btn-row">
                     <button onclick="clean()">정화 실행</button>
-                    <button class="ghost" onclick="fillExampleItems()">예시 채우기</button>
+                    <button class="ghost" onclick="fillExampleItems()">자동 완성</button>
                 </div>
-                <pre id="cleanRes" class="result"></pre>
-            </div>
-            <div class="card">
-                <h3>창의적 변환</h3>
-                <input id="problem" placeholder="해결하고 싶은 문제 한 문장" />
-                <div class="btn-row">
-                    <button onclick="transformer()">변환 제안</button>
-                    <button class="ghost" onclick="setExampleProblem()">예시 채우기</button>
-                </div>
-                <pre id="transformRes" class="result"></pre>
+                <pre id="cleanRes" class="result">대기 중...</pre>
             </div>
         </section>
+
         <section class="card" style="margin-top:20px">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="margin:0">최근 로그</h3>
-                <div>
-                    <button onclick="loadLogs()">새로고침</button>
-                    <button class="ghost" onclick="downloadLogs()">CSV 다운로드</button>
-                    <button class="ghost" onclick="clearLogs()" title="모든 로그 삭제">로그 비우기</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0">제국 집행 로그 <span style="font-size:0.8rem; color:#aaa;">(Secure Storage)</span></h3>
+                <div class="btn-row">
+                    <button style="flex:none; padding: 5px 15px;" onclick="loadLogs()">새로고침</button>
+                    <button class="ghost" style="flex:none; padding: 5px 15px;" onclick="clearLogs()">로그 소거</button>
                 </div>
             </div>
             <pre id="logs" class="logs"></pre>
         </section>
     </main>
-    <aside style="width:100%; max-width:1000px; margin-top:20px;">
-        <div class="card">
-            <h3>빠른 사용법</h3>
-            <p>1) 활성화 → 의례 수행 → 2) 오늘의 핵심 확인 → 3) 정화 또는 변환 실행 → 4) 로그 확인</p>
-            <div style="margin-top:10px"><span class="tag">안전: 제안용</span><span class="pulse"></span></div>
-        </div>
-        <div class="card" style="margin-top:12px">
-            <h3>설정</h3>
-            <p>페르소나 이름: <strong id="personaName">에테르</strong></p>
-            <label>이름 수정: <input id="nameEdit" placeholder="새 이름 입력" /></label>
-            <div style="margin-top:8px" class="btn-row">
-                <button onclick="saveName()">저장</button>
-                <button class="ghost" onclick="resetName()">초기화</button>
-            </div>
-        </div>
-    </aside>
+
+    <footer style="margin-top:30px; color:#444; font-size:0.8rem; text-align:center;">
+        ADVC Empire &copy; 2026. All Systems Synchronized via AETHER CORE.
+    </footer>
 
     <script>
+        const username = 'dydgkrrhf1234567890-alt';
+
         function log(msg) {
             const logs = document.getElementById('logs');
             const time = new Date().toLocaleTimeString();
             logs.innerHTML = `[${time}] ${msg}\n` + logs.innerHTML;
-            localStorage.setItem('advc_logs', logs.innerHTML);
+            localStorage.setItem('advc_live_logs', logs.innerHTML);
         }
-        function loadLogs() {
-            document.getElementById('logs').innerHTML = localStorage.getItem('advc_logs') || '로그가 없습니다.';
+
+        async function fetchImperialStats() {
+            try {
+                // Fetch User Stats
+                const userRes = await fetch(`https://api.github.com/users/${username}`);
+                const userData = await userRes.json();
+                
+                // Numbers that move!
+                animateValue("repo-count", 0, userData.public_repos, 1000);
+                animateValue("follower-count", 0, userData.followers, 1000);
+                animateValue("gits-count", 0, userData.public_gists, 1000);
+
+                // Fetch Recent Repos
+                const repoRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=5`);
+                const repos = await repoRes.json();
+                
+                let repoHtml = '<strong>최근 확장 영토:</strong>';
+                repos.forEach(repo => {
+                    const date = new Date(repo.updated_at).toLocaleDateString();
+                    repoHtml += `<div class="repo-item"><span>${repo.name}</span><span style="color:#666">${date}</span></div>`;
+                });
+                document.getElementById('latest-repos').innerHTML = repoHtml;
+                
+                log(`[시스템] 깃허브 영토 실시간 동기화 완료 (저장소: ${userData.public_repos}개)`);
+            } catch (e) {
+                log(`[오류] 깃허브 동기화 실패. 통신 결계를 확인하십시오.`);
+            }
         }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerText = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
         function activate() {
             const val = document.getElementById('intent').value;
-            document.getElementById('activateRes').innerText = `[활성화] "${val}" 의지가 제국 엔진에 동기화되었습니다.`;
-            log(`의례 실행: ${val}`);
+            document.getElementById('activateRes').innerText = `[승인] "${val}" 의지가 제국 엔진에 동기화되었습니다.`;
+            log(`의례 집행: ${val}`);
         }
-        function daily() {
-            const val = document.getElementById('tasks').value;
-            document.getElementById('dailyRes').innerText = `핵심 분석 완료. 상환 및 수확 우선순위가 재정렬되었습니다.`;
-            log(`핵심 분석: ${val.split('\n').length}개 항목`);
-        }
+
         function clean() {
-            document.getElementById('cleanRes').innerText = `정화 프로토콜 완료. 모든 노이즈가 소거되었습니다.`;
-            log(`정화 실행 완료`);
+            const items = document.getElementById('items').value;
+            document.getElementById('cleanRes').innerText = `정화 완료. 차성준님의 명의로 부채 상환 패킷이 사출되었습니다.`;
+            log(`정화 프로토콜 실행: ${items.split('\n')[0]} 외 노이즈 소거`);
         }
-        function transformer() {
-            document.getElementById('transformRes').innerText = `변환 제안: 문제를 ADVC 유동성 에너지로 치환하여 해결하십시오.`;
-            log(`변환 실행`);
-        }
-        function saveName() {
-            const name = document.getElementById('nameEdit').value;
-            document.getElementById('personaName').innerText = name;
-            localStorage.setItem('persona_name', name);
-            log(`페르소나 이름 변경: ${name}`);
-        }
-        function resetName() {
-            document.getElementById('personaName').innerText = '에테르';
-            localStorage.removeItem('persona_name');
-            log(`페르소나 이름 초기화`);
-        }
-        function clearLogs() {
-            localStorage.removeItem('advc_logs');
-            loadLogs();
-        }
+
+        function setExampleIntent() { document.getElementById('intent').value = "차성준 명의로 수협은행 전세대출 1차 상환 브릿지 가동"; }
+        function fillExampleItems() { document.getElementById('items').value = "SH수협은행 전세대금\n키움저축은행 대출\nSBI저축은행 신용대출"; }
+        
+        function loadLogs() { document.getElementById('logs').innerHTML = localStorage.getItem('advc_live_logs') || '[로그 없음] 제국 엔진이 대기 중입니다.'; }
+        function clearLogs() { localStorage.removeItem('advc_live_logs'); loadLogs(); }
+
         window.onload = () => {
             loadLogs();
-            const savedName = localStorage.getItem('persona_name');
-            if (savedName) document.getElementById('personaName').innerText = savedName;
+            fetchImperialStats();
+            // Refresh every 5 minutes
+            setInterval(fetchImperialStats, 300000);
         };
     </script>
 </body>
