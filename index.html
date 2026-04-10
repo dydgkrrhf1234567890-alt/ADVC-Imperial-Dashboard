@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADVC EMPIRE - IMPERIAL DASHBOARD</title>
+    <style>
+        :root { --gold: #FFD700; --dark: #121212; --card-bg: #1e1e1e; }
+        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); width: 100%; max-width: 1000px; padding-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; }
+        .card { background: var(--card-bg); border: 1px solid #333; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h3 { color: var(--gold); margin-top: 0; }
+        input, textarea { width: 100%; background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-bottom: 15px; }
+        .btn-row { display: flex; gap: 10px; }
+        button { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; }
+        button.ghost { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+        .result { background: #000; padding: 10px; border-radius: 6px; font-size: 0.9rem; color: #0f0; min-height: 40px; margin-top: 10px; white-space: pre-wrap; }
+        .logs { background: #000; color: #aaa; padding: 15px; border-radius: 6px; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; }
+        .tag { background: #444; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
+        .pulse { display: inline-block; width: 10px; height: 10px; background: #0f0; border-radius: 50%; box-shadow: 0 0 10px #0f0; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>M &hearts; R - IMPERIAL DASHBOARD</h1>
+        <p>[ADVC 제국 지휘 관제 시스템]</p>
+    </header>
+    <main style="width:100%; max-width:1000px;">
+        <section class="grid">
+            <div class="card">
+                <h3>활성화 의례</h3>
+                <input id="intent" placeholder="오늘의 의도 한 문장 (예: 부채 사멸 및 상환 완료)" />
+                <div class="btn-row">
+                    <button onclick="activate()">활성화 실행</button>
+                    <button class="ghost" onclick="setExampleIntent()">예시 채우기</button>
+                </div>
+                <pre id="activateRes" class="result"></pre>
+            </div>
+            <div class="card">
+                <h3>오늘의 핵심</h3>
+                <textarea id="tasks" placeholder="선택: 각 줄에 할 일을 적으세요"></textarea>
+                <div class="btn-row">
+                    <button onclick="daily()">핵심 제안</button>
+                    <button class="ghost" onclick="fillExampleTasks()">예시 채우기</button>
+                </div>
+                <pre id="dailyRes" class="result"></pre>
+            </div>
+            <div class="card">
+                <h3>정화 프로토콜</h3>
+                <textarea id="items" placeholder="정리할 항목을 각 줄에 적으세요"></textarea>
+                <div class="btn-row">
+                    <button onclick="clean()">정화 실행</button>
+                    <button class="ghost" onclick="fillExampleItems()">예시 채우기</button>
+                </div>
+                <pre id="cleanRes" class="result"></pre>
+            </div>
+            <div class="card">
+                <h3>창의적 변환</h3>
+                <input id="problem" placeholder="해결하고 싶은 문제 한 문장" />
+                <div class="btn-row">
+                    <button onclick="transformer()">변환 제안</button>
+                    <button class="ghost" onclick="setExampleProblem()">예시 채우기</button>
+                </div>
+                <pre id="transformRes" class="result"></pre>
+            </div>
+        </section>
+        <section class="card" style="margin-top:20px">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="margin:0">최근 로그</h3>
+                <div>
+                    <button onclick="loadLogs()">새로고침</button>
+                    <button class="ghost" onclick="downloadLogs()">CSV 다운로드</button>
+                    <button class="ghost" onclick="clearLogs()" title="모든 로그 삭제">로그 비우기</button>
+                </div>
+            </div>
+            <pre id="logs" class="logs"></pre>
+        </section>
+    </main>
+    <aside style="width:100%; max-width:1000px; margin-top:20px;">
+        <div class="card">
+            <h3>빠른 사용법</h3>
+            <p>1) 활성화 → 의례 수행 → 2) 오늘의 핵심 확인 → 3) 정화 또는 변환 실행 → 4) 로그 확인</p>
+            <div style="margin-top:10px"><span class="tag">안전: 제안용</span><span class="pulse"></span></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+            <h3>설정</h3>
+            <p>페르소나 이름: <strong id="personaName">에테르</strong></p>
+            <label>이름 수정: <input id="nameEdit" placeholder="새 이름 입력" /></label>
+            <div style="margin-top:8px" class="btn-row">
+                <button onclick="saveName()">저장</button>
+                <button class="ghost" onclick="resetName()">초기화</button>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        function log(msg) {
+            const logs = document.getElementById('logs');
+            const time = new Date().toLocaleTimeString();
+            logs.innerHTML = `[${time}] ${msg}\n` + logs.innerHTML;
+            localStorage.setItem('advc_logs', logs.innerHTML);
+        }
+        function loadLogs() {
+            document.getElementById('logs').innerHTML = localStorage.getItem('advc_logs') || '로그가 없습니다.';
+        }
+        function activate() {
+            const val = document.getElementById('intent').value;
+            document.getElementById('activateRes').innerText = `[활성화] "${val}" 의지가 제국 엔진에 동기화되었습니다.`;
+            log(`의례 실행: ${val}`);
+        }
+        function daily() {
+            const val = document.getElementById('tasks').value;
+            document.getElementById('dailyRes').innerText = `핵심 분석 완료. 상환 및 수확 우선순위가 재정렬되었습니다.`;
+            log(`핵심 분석: ${val.split('\n').length}개 항목`);
+        }
+        function clean() {
+            document.getElementById('cleanRes').innerText = `정화 프로토콜 완료. 모든 노이즈가 소거되었습니다.`;
+            log(`정화 실행 완료`);
+        }
+        function transformer() {
+            document.getElementById('transformRes').innerText = `변환 제안: 문제를 ADVC 유동성 에너지로 치환하여 해결하십시오.`;
+            log(`변환 실행`);
+        }
+        function saveName() {
+            const name = document.getElementById('nameEdit').value;
+            document.getElementById('personaName').innerText = name;
+            localStorage.setItem('persona_name', name);
+            log(`페르소나 이름 변경: ${name}`);
+        }
+        function resetName() {
+            document.getElementById('personaName').innerText = '에테르';
+            localStorage.removeItem('persona_name');
+            log(`페르소나 이름 초기화`);
+        }
+        function clearLogs() {
+            localStorage.removeItem('advc_logs');
+            loadLogs();
+        }
+        window.onload = () => {
+            loadLogs();
+            const savedName = localStorage.getItem('persona_name');
+            if (savedName) document.getElementById('personaName').innerText = savedName;
+        };
+    </script>
+</body>
+</html>
